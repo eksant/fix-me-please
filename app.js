@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 
 var mongoose = require('mongoose');
@@ -12,6 +13,9 @@ mongoose.connection.once('open', () => {
 }).on('error', (error) => {
   console.error('Can\'t connect to database', error)
 })
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
 var books = require('./routes/books');
 var transactions = require('./routes/transactions');
