@@ -1,13 +1,20 @@
 const express = require('express');
-const app = express;
+const app = express();
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/api-crud-mongoose', (err) => {
-  err ? console.log('Can\'t connect to database') : console.log('Database connected')
-});
+// mongoose.connect.once('mongodb://localhost/api-crud-mongoose', (err) => {
+//   err ? console.log('Can\'t connect to database') : console.log('Database connected')
+// });
+mongoose.connection.openUri('mongodb://localhost:27017/blog')
+mongoose.Promise = global.Promise
+mongoose.connection.once('open', () => {
+  console.log('Database connected')
+}).on('error', (error) => {
+  console.error('Can\'t connect to database', error)
+})
 
-var books = require('routes/books');
-var transactions = require('routes/transactions');
+var books = require('./routes/books');
+var transactions = require('./routes/transactions');
 
 app.use('/books', books);
 app.use('/transactions', transactions);
